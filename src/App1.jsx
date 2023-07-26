@@ -1,75 +1,153 @@
-import classNames from "classnames";
 import { useState } from "react";
 
-const TabTable = ({ children, onClick, isActive }) => {
-  return (
-    <button
-      onClick={onClick}
-      className={classNames("uppercase font-semibold mr-3 text-gray-300", {
-        "text-black": isActive,
-      })}
-    >
-      {children}
-    </button>
-  );
-};
-const TAB_INDEX = ["Positive", "Negative", "Neutral"];
-const TabContent = ({ change, setChange }) => {
-  return (
-    <>
-      <div className="my-3">
-        {TAB_INDEX.map((text, index) => (
-          <TabTable
-            key={index}
-            onClick={() => setChange(index)}
-            isActive={change === index}
-          >
-            {text}
-          </TabTable>
-        ))}
-      </div>
-      <div>
-        <h5>{TAB_INDEX[change]} content</h5>
-      </div>
-    </>
-  );
-};
+const App = () => {
+  const [step, setStep] = useState(0);
 
-function App() {
-  const [change, setChange] = useState(0);
-  const hanleSubmit = (e) => {
-    e.preventDefault();
-    const val = +e.target[0].value - 1;
-    if (val < 0 || val >= 3) {
-      alert("Invalid");
-      return;
-    } else {
-      setChange(val);
-    }
-    console.log(val);
+  const handleBackClick = () => {
+    setStep(step - 1);
   };
+
+  // const handleTitleSubmit = () => {
+  //   setStep(1);
+  // };
+
+  const handleDescriptionSubmit = () => {
+    setStep(2);
+  };
+
+  const handleSubmit = () => {
+    // Submit form data
+    setStep(3);
+  };
+
   return (
-    <div className="h-screen bg-blue-600 flex justify-center items-center w-screen">
-      <div className="card  bg-white px-4 py-6 w-[800px]">
-        <form onSubmit={hanleSubmit}>
-          <input
-            className="border-0 border-b w-5/6 font-normal focus:ring-0 "
-            type="number"
-            name=""
-            id=""
-            placeholder="Enter tab index"
-          />
+    <div className="bg-[#8E44AD] w-screen h-screen flex justify-center items-center">
+      <div className="box bg-white flex rounded p-4 w-[600px] justify-between">
+        <div className="list-decimal pl-4">
           <button
-            className="  py-3 bg-gray-200  inline-block ml-5 px-2"
-            type="submit"
+            className={`text-${step >= 0 ? "black" : "neutral-500"} block`}
+            onClick={() => setStep(0)}
+            disabled={step === 2}
           >
-            Change Tab
+            <span
+              className={`${
+                step >= 0 ? "bg-blue-600" : "bg-neutral-200"
+              } px-3 py-1 mr-2 font-semibold text-center rounded-2xl mb-2 inline-block`}
+            >
+              1
+            </span>
+            <span
+              className={`${step >= 0 ? "text-black" : "text-neutral-500"}`}
+            >
+              Choose title
+            </span>
           </button>
-        </form>
-        <TabContent change={change} setChange={setChange} />
+          <button
+            className={`text-${step >= 1 ? "black" : "neutral-500"} block`}
+            onClick={() => setStep(1)}
+            disabled={step === 3}
+          >
+            <span
+              className={`${
+                step >= 1 ? "bg-blue-600" : "bg-neutral-200"
+              } px-3 py-1 mr-2 font-semibold text-center rounded-2xl mb-2 inline-block`}
+            >
+              2
+            </span>
+            <span
+              className={`${step >= 1 ? "text-black" : "text-neutral-500"}`}
+            >
+              Choose description
+            </span>
+          </button>
+          <button
+            className={`text-${step >= 2 ? "black" : "neutral-500"} block`}
+            onClick={() => setStep(2)}
+            disabled={step === 0}
+          >
+            <span
+              className={`${
+                step >= 2 ? "bg-blue-600" : "bg-neutral-200"
+              } px-3 py-1 mr-2 font-semibold text-center rounded-2xl mb-2 inline-block`}
+            >
+              3
+            </span>
+            <span
+              className={`${step >= 2 ? "text-black" : "text-neutral-500"}`}
+            >
+              Confirm data
+            </span>
+          </button>
+        </div>
+        <div>
+          {step === 0 && (
+            <>
+              <h4 className="mb-3">Choose title content</h4>
+              <button
+                className="border bg-neutral-300 px-4 py-3"
+                onClick={() => setStep(1)}
+              >
+                Submit title
+              </button>
+            </>
+          )}
+          {step === 1 && (
+            <>
+              <h4 className="mb-3">Choose description content</h4>
+              <button
+                className="border bg-neutral-300 mr-2 px-4 py-3"
+                type="button"
+                onClick={() => setStep(step - 1)}
+              >
+                Back
+              </button>
+              <button
+                className="border bg-neutral-300 px-4 py-3"
+                onClick={() => setStep(2)}
+                disabled={step === 3}
+              >
+                Submit description
+              </button>
+            </>
+          )}
+          {step === 2 && (
+            <>
+              <h4 className="mb-3">Are you happy?</h4>
+              <button
+                className="border bg-neutral-300 px-4 py-3"
+                type="button"
+                onClick={() => {
+                  if (step > 0) {
+                    handleBackClick();
+                  }
+                }}
+              >
+                No, go Back
+              </button>
+              <button
+                className="border bg-neutral-300 ml-2 px-4 py-3"
+                onClick={() => {
+                  if (step < 2) {
+                    handleDescriptionSubmit();
+                  } else {
+                    handleSubmit();
+                  }
+                }}
+              >
+                Yes, go ahead
+              </button>
+            </>
+          )}
+          {step === 3 && (
+            <>
+              <h4 className="mb-3">
+                Ok, you're done. Thanks for submitting your data!{" "}
+              </h4>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
-}
-
+};
 export default App;

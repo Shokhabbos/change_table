@@ -1,66 +1,153 @@
 import { useState } from "react";
 
-const TabIndex = () => {
-  const [contName, setContName] = useState("Positive");
+const App = () => {
+  const [step, setStep] = useState(0);
 
-  const handleTabClick = (tabName) => {
-    setContName(tabName);
+  const handleBackClick = () => {
+    setStep(step - 1);
   };
 
-  const handleInput = (e) => {
-    e.preventDefault();
-    const tabIndex = parseInt(e.target.children[0].value);
-    switch (tabIndex) {
-      case 1:
-        setContName("Positive");
-        break;
-      case 2:
-        setContName("Negative");
-        break;
-      case 3:
-        setContName("Neutral");
-        break;
-      default:
-        alert("Not Found");
-        setShowModal(false);
-        break;
-    }
+  // const handleTitleSubmit = () => {
+  //   setStep(1);
+  // };
+
+  const handleDescriptionSubmit = () => {
+    setStep(2);
+  };
+
+  const handleSubmit = () => {
+    // Submit form data
+    setStep(3);
   };
 
   return (
-    <div className="big__div">
-      <div className="card">
-        <form onSubmit={handleInput} className="top">
-          <input name="tabIndex" type="text" placeholder="Enter tab index" />
-          <button type="submit" className="btn">
-            Change tab
+    <div className="bg-[#8E44AD] w-screen h-screen flex justify-center items-center">
+      <div className="box bg-white flex rounded p-4 w-[600px] justify-between">
+        <div className="list-decimal pl-4">
+          <button
+            className={`text-${step >= 0 ? "black" : "neutral-500"} block`}
+            onClick={() => setStep(0)}
+            disabled={step === 2}
+          >
+            <span
+              className={`${
+                step >= 0 ? "bg-blue-600" : "bg-neutral-200"
+              } px-3 py-1 mr-2 font-semibold text-center rounded-2xl mb-2 inline-block`}
+            >
+              1
+            </span>
+            <span
+              className={`${step >= 0 ? "text-black" : "text-neutral-500"}`}
+            >
+              Choose title
+            </span>
           </button>
-        </form>
-        <div className="middle">
-          {/* Use handleTabClick to set the 'contName' state */}
-          <span
-            onClick={() => handleTabClick("Positive")}
-            className={`spn ${contName === "Positive" ? "font-semibold" : ""}`}
+          <button
+            className={`text-${step >= 1 ? "black" : "neutral-500"} block`}
+            onClick={() => setStep(1)}
+            disabled={step === 3}
           >
-            POSITIVE
-          </span>
-          <span
-            onClick={() => handleTabClick("Negative")}
-            className={`spn ${contName === "Negative" ? "font-semibold" : ""}`}
+            <span
+              className={`${
+                step >= 1 ? "bg-blue-600" : "bg-neutral-200"
+              } px-3 py-1 mr-2 font-semibold text-center rounded-2xl mb-2 inline-block`}
+            >
+              2
+            </span>
+            <span
+              className={`${step >= 1 ? "text-black" : "text-neutral-500"}`}
+            >
+              Choose description
+            </span>
+          </button>
+          <button
+            className={`text-${step >= 2 ? "black" : "neutral-500"} block`}
+            onClick={() => setStep(2)}
+            disabled={step === 0}
           >
-            NEGATIVE
-          </span>
-          <span
-            onClick={() => handleTabClick("Neutral")}
-            className={`spn ${contName === "Neutral" ? "font-semibold" : ""}`}
-          >
-            NEUTRAL
-          </span>
+            <span
+              className={`${
+                step >= 2 ? "bg-blue-600" : "bg-neutral-200"
+              } px-3 py-1 mr-2 font-semibold text-center rounded-2xl mb-2 inline-block`}
+            >
+              3
+            </span>
+            <span
+              className={`${step >= 2 ? "text-black" : "text-neutral-500"}`}
+            >
+              Confirm data
+            </span>
+          </button>
         </div>
-        <p>{contName} content</p>
+        <div>
+          {step === 0 && (
+            <>
+              <h4 className="mb-3">Choose title content</h4>
+              <button
+                className="border bg-neutral-300 px-4 py-3"
+                onClick={() => setStep(1)}
+              >
+                Submit title
+              </button>
+            </>
+          )}
+          {step === 1 && (
+            <>
+              <h4 className="mb-3">Choose description content</h4>
+              <button
+                className="border bg-neutral-300 mr-2 px-4 py-3"
+                type="button"
+                onClick={() => setStep(step - 1)}
+              >
+                Back
+              </button>
+              <button
+                className="border bg-neutral-300 px-4 py-3"
+                onClick={() => setStep(2)}
+                disabled={step === 3}
+              >
+                Submit description
+              </button>
+            </>
+          )}
+          {step === 2 && (
+            <>
+              <h4 className="mb-3">Are you happy?</h4>
+              <button
+                className="border bg-neutral-300 px-4 py-3"
+                type="button"
+                onClick={() => {
+                  if (step > 0) {
+                    handleBackClick();
+                  }
+                }}
+              >
+                No, go Back
+              </button>
+              <button
+                className="border bg-neutral-300 ml-2 px-4 py-3"
+                onClick={() => {
+                  if (step < 2) {
+                    handleDescriptionSubmit();
+                  } else {
+                    handleSubmit();
+                  }
+                }}
+              >
+                Yes, go ahead
+              </button>
+            </>
+          )}
+          {step === 3 && (
+            <>
+              <h4 className="mb-3">
+                Ok, you're done. Thanks for submitting your data!{" "}
+              </h4>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
 };
-
-export default TabIndex;
+export default App;
